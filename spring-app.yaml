@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+  namespace: minikube-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: dockedat6160/spring-test:1.0
+          ports:
+            - containerPort: 4202
+          volumeMounts:
+            - name: app-logs
+              mountPath: /app/logs
+      volumes:
+        - name: app-logs
+          hostPath:
+            path: /var/log/app-logs  # This should match the Fluent Bit config
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app-service
+  namespace: minikube-apps
+spec:
+  type: NodePort
+  ports:
+    - port: 4202
+      targetPort: 4202
+      nodePort: 30422
+  selector:
+    app: springboot-app

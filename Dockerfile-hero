@@ -1,0 +1,22 @@
+#Java Docker Image
+ 
+FROM eclipse-temurin:17-alpine
+ENV TZ=Asia/Dhaka
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime
+ 
+RUN addgroup --system --gid 1001 itss
+RUN adduser --system --uid 1001 --ingroup itss itss
+# Create the /app directory and set ownership
+RUN mkdir /app
+RUN chown itss:itss /app
+
+WORKDIR /app
+
+COPY target/Starter.jar /app/Starter.jar
+
+RUN chown itss:itss /app/Starter.jar
+
+USER itss
+ 
+EXPOSE 4202
+ENTRYPOINT ["java","-jar","/app/Starter.jar"]
