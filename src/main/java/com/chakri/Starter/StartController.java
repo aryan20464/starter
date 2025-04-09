@@ -18,6 +18,7 @@ public class StartController {
     public String one()
     {
         log.info("This is hello string {}", LocalDateTime.now());
+        log.info("This is another hello string added for debug");
         return "hello";
 
     }
